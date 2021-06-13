@@ -22,7 +22,7 @@ SESS_NAME=sid
 #express session secret
 SESS_SECRET=secret!session
 # session lifetime 1 day
-SESS_LIFETIME=1000 * 60 * 60 * 24
+SESS_LIFETIME=86400000
 ```
 
 # remaning tasks
