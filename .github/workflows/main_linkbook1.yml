@@ -34,6 +34,6 @@ jobs:
       with:
         app-name: linkbook1
         slot-name: Production
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_504CBC1E7D2B4822A3CA5C9F81093127 }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8666A4666B1144CCACBA1292E6672F55 }}
         package: .
 
