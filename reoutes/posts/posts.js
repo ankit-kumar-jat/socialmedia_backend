@@ -35,7 +35,7 @@ postRouter.post("/create", isAuthenticated, async (req, res) => {
         // const user = await User.findById(userId);
         await User.findByIdAndUpdate({ _id: userId }, { $inc: { posts: 1 } })
         generateNotifications(req.session.user, newPost._id);
-        res.json({ "success": true, "message": 'Post uploaded' });
+        res.json({ "success": true, "message": 'Post uploaded', "post": newPost });
     } catch (err) {
         res.send(parseError(err));
     }

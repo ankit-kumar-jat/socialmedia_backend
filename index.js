@@ -18,6 +18,7 @@ const cors = require("cors");
         const SESS_SECRET = process.env.SESS_SECRET;
         const SESS_LIFETIME = process.env.SESS_LIFETIME;
         const NODE_ENV = process.env.NODE_ENV;
+        const CORS_URL = process.env.CORS_URL;
 
         await mongoose.connect(MONGO_URI, {
             useNewUrlParser: true,
@@ -62,7 +63,7 @@ const cors = require("cors");
 
 
         // app.use(cors({ origin: 'http://127.0.0.1:3000', credentials: true }));
-        app.use(cors({ origin: 'http://linkbook.ankitkumarjat.me', credentials: true }));
+        app.use(cors({ origin: CORS_URL, credentials: true }));
         // app.use(cors({ origin: 'http://192.168.42.150:65146', credentials: true }));
 
         app.use('/images', express.static('public/images', { maxAge: 87000000 }))
