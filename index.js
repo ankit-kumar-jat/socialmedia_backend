@@ -65,7 +65,7 @@ const cors = require("cors");
         app.use(cors({ origin: 'http://linkbook.ankitkumarjat.me', credentials: true }));
         // app.use(cors({ origin: 'http://192.168.42.150:65146', credentials: true }));
 
-        app.use('/images', express.static('public/images', { maxAge: '500' }))
+        app.use('/images', express.static('public/images', { maxAge: 87000000 }))
         app.use("/auth", authRouter);
         app.use("/users", userRouter);
         app.use("/posts", postRouter);
