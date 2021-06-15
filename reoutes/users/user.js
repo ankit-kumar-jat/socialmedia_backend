@@ -3,6 +3,7 @@ const { isAuthenticated, parseError, deleteImage } = require("../../utils/helper
 const User = require("../../models/user");
 const Follow = require('../../models/follow');
 const uuid = require('uuid');
+const Notification = require("../../models/notification");
 
 const userRouter = Router();
 
@@ -142,5 +143,33 @@ userRouter.get("/follow", isAuthenticated, async (req, res) => {
         res.json(parseError(err));
     }
 });
+
+
+userRouter.get("/notifications", isAuthenticated, async (req, res) => {
+    try {
+        const userId = req.session.user.userId;
+        const notifications = await Notification.find({ userId });
+        if (notifications)
+            res.json({ "success": true, notifications: notifications });
+        else
+            res.json({ "success": true, "message": "No Notifications found" });
+    } catch (err) {
+        res.json(parseError(err));
+    }
+});
+
+userRouter.delete("/notifications/:id", isAuthenticated, async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const userId = req.query.userId;
+        const notification = await Notification.deleteOne({ userId, _id });
+        if (notification)
+            res.json({ "success": true, "message": "Notification Deleted" });
+        else
+            res.json({ "success": true, "message": "Notification not found" });
+    } catch (err) {
+        res.json(parseError(err));
+    }
+})
 
 module.exports = userRouter;

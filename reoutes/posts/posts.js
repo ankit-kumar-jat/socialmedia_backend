@@ -7,6 +7,7 @@ const Comment = require("../../models/comment");
 const Follow = require('../../models/follow');
 const uuid = require('uuid');
 const mongoose = require('mongoose');
+const { generateNotifications } = require("../../utils/generateNotifications");
 
 const postRouter = Router();
 
@@ -27,13 +28,13 @@ postRouter.post("/create", isAuthenticated, async (req, res) => {
             await image.mv(uploadPath, function (err) {
                 if (err)
                     return res.status(500).send(parseError(err));
-
             });
         }
         const newPost = new Post({ userId: mongoose.Types.ObjectId(userId), postText, postImage });
         await newPost.save();
         // const user = await User.findById(userId);
         await User.findByIdAndUpdate({ _id: userId }, { $inc: { posts: 1 } })
+        generateNotifications(req.session.user, newPost._id);
         res.json({ "success": true, "message": 'Post uploaded' });
     } catch (err) {
         res.send(parseError(err));
@@ -212,24 +213,80 @@ postRouter.get("/comment", isAuthenticated, async (req, res) => {
 postRouter.get("/byid", isAuthenticated, async (req, res) => {
     try {
         if (req.query.postId) {
-            const post = await Post.findById(req.query.postId);
-            if (post) {
-                const user = await User.findById(post.userId);
-                res.json({
-                    "success": true,
-                    "postId": post._id,
-                    "postImage": post.postImage,
-                    "postText": post.postText,
-                    "comments": post.comments,
-                    "likes": post.likes,
-                    "owner": {
-                        "userId": post.userId,
-                        "login": user.username,
-                        "avatar": user.avatar_url,
+            const post = await Post.aggregate([
+                {
+                    $match: { _id: mongoose.Types.ObjectId(req.query.postId) }
+                },
+                {
+                    "$lookup": {
+                        "from": "users",
+                        "let": { "userId": "$userId" },
+                        "pipeline": [
+                            {
+                                "$match": {
+                                    "$expr": {
+                                        "$eq": ["$_id", "$$userId"]
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    "userId": "$_id",
+                                    "login": "$username",
+                                    "avatar": "$avatar_url",
+                                }
+                            },
+                            { $project: { _id: 0 } },
+                        ],
+                        "as": "owner"
                     },
-                    "created_at": post.createdAt,
-                    "updated_at": post.updatedAt
-                });
+                },
+                {
+                    $unwind: "$owner"
+                },
+                {
+                    "$lookup": {
+                        "from": "comments",
+                        "let": { "postId": "$_id" },
+                        "pipeline": [
+                            {
+                                "$match": {
+                                    "$expr": {
+                                        "$eq": ["$postId", "$$postId"]
+                                    }
+                                }
+                            },
+                            { $sort: { createdAt: -1 } },
+                            {
+                                $project: {
+                                    "commentId": "$_id",
+                                    "value": "$value",
+                                    "userId": "$userId",
+                                    "created_at": "$createdAt"
+                                }
+                            },
+                            { $project: { _id: 0 } },
+                        ],
+                        "as": "commentslist",
+                    }
+                },
+                {
+                    "$project": {
+                        "postId": "$_id",
+                        "postImage": 1,
+                        "postText": 1,
+                        "comments": 1,
+                        "likes": 1,
+                        "commentslist": 1,
+                        "owner": 1,
+                        "created_at": "$createdAt",
+                        "updated_at": "$updatedAt",
+                        "_id": 0,
+                    }
+                },
+            ]).exec()
+            if (post[0]) {
+                res.json({ success: true, post: post[0] });
             } else {
                 throw new Error("Post not found")
             }

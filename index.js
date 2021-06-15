@@ -47,6 +47,7 @@ const cors = require("cors");
             resave: false,
             cookie: {
                 sameSite: true,
+                // sameSite: "None",
                 secure: NODE_ENV === 'production',
                 maxAge: parseInt(SESS_LIFETIME)
             }
@@ -60,7 +61,8 @@ const cors = require("cors");
         // }); 
 
 
-        app.use(cors({ origin: 'http://127.0.0.1:3000', credentials: true }));
+        // app.use(cors({ origin: 'http://127.0.0.1:3000', credentials: true }));
+        app.use(cors({ origin: 'http://linkbook.ankitkumarjat.me', credentials: true }));
         // app.use(cors({ origin: 'http://192.168.42.150:65146', credentials: true }));
 
         app.use('/images', express.static('public/images', { maxAge: '500' }))
