@@ -7,7 +7,8 @@
   "license": "ISC",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "prod": "nodemon server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,6 +18,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-session": "^1.17.1",
+    "greenlock-express": "v4",
     "http2": "^3.3.7",
     "joi": "^17.4.0",
     "mongoose": "^5.12.7",
