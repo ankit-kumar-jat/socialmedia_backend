@@ -1,5 +1,8 @@
-var app = require("./index");
+var app = require("./index.js");
 
+app.get("/", (req, res) => {
+	res.end("Its working with ssl.");
+})
 //require("greenlock-express")
 require("greenlock-express")
 	.init({

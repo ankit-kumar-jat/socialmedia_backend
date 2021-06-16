@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "prod": "nodemon server.js"
+    "prod": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

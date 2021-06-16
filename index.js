@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const MongoStore = require("connect-mongo");
 const express = require("express");
-const http2 = require('http2');
+// const http2 = require('http2');
 const session = require("express-session");
 require('dotenv').config();
 const authRouter = require("./reoutes/auth/main");
@@ -9,6 +9,7 @@ const userRouter = require("./reoutes/users/user");
 const postRouter = require("./reoutes/posts/posts");
 const fileUpload = require('express-fileupload');
 const cors = require("cors");
+const app = express();
 
 (async () => {
     try {
@@ -28,7 +29,6 @@ const cors = require("cors");
         });
         console.log('MongoDB connected.')
 
-        const app = express();
         app.disable('x-powered-by');
 
         app.use(express.urlencoded({ extended: true }));
@@ -71,11 +71,11 @@ const cors = require("cors");
         app.use("/users", userRouter);
         app.use("/posts", postRouter);
         if (require.main === module) {
-            app.listen(3000, () => console.log(`Server is rinning on 127.0.0.1:${3000}`));
+            app.listen(3000);
         } else {
             app.listen(PORT, () => console.log(`Server is rinning on 127.0.0.1:${PORT}`));
         }
-        module.exports = app;
+
         // http2.createServer({ allowHTTP1: true }, app)
         //     .listen(PORT, (err) => {
         //         if (err) {
@@ -93,5 +93,5 @@ const cors = require("cors");
     }
 })();
 
-
+module.exports = app;
 
