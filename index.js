@@ -71,6 +71,8 @@ const cors = require("cors");
         app.use("/users", userRouter);
         app.use("/posts", postRouter);
         if (require.main === module) {
+            app.listen(3000, () => console.log(`Server is rinning on 127.0.0.1:${3000}`));
+        } else {
             app.listen(PORT, () => console.log(`Server is rinning on 127.0.0.1:${PORT}`));
         }
         module.exports = app;
