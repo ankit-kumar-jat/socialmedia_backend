@@ -71,10 +71,12 @@ const app = express();
         app.use("/users", userRouter);
         app.use("/posts", postRouter);
         if (require.main === module) {
-            app.listen(3000);
-        } else {
             app.listen(PORT, () => console.log(`Server is rinning on 127.0.0.1:${PORT}`));
         }
+        // else {
+        //     app.listen(PORT, () => console.log(`Server is rinning on 127.0.0.1:${PORT}`));
+        //     app.listen(3000);
+        // }
 
         // http2.createServer({ allowHTTP1: true }, app)
         //     .listen(PORT, (err) => {
