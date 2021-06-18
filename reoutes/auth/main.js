@@ -118,7 +118,7 @@ authRouter.post("/forget-pass", isNotAuthenticated, async (req, res) => {
             else {
                 const token = await saveResetToken(resetPasswordToken, resetPasswordExpires, userId, Reset);
                 // send this token via email to user
-                await endEmail(`<p><strong>token</strong>: ${token.resetPasswordToken}<br> <strong>tokenid: ${token.tokenId}</p>`, user.email, 'Password reset token');
+                await sendEmail(`<p><strong>token</strong>: ${token.resetPasswordToken}<br> <strong>tokenid: ${token.tokenId}</p>`, user.email, 'Password reset token');
                 res.json({ "success": true, "message": "Reset token generated" })
             }
         } else {
