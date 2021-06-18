@@ -112,13 +112,13 @@ authRouter.post("/forget-pass", isNotAuthenticated, async (req, res) => {
                 const token = await saveResetToken(resetPasswordToken, resetPasswordExpires, userId, Reset);
                 // send this token via email to user
                 // sendEmail(`<p><strong>token</strong>: ${token.resetPasswordToken}<br> <strong>tokenid: ${token.tokenId}</p>`, user.email, 'Password reset token');
-                sendEmail(`<p><strong>Password Reset Link</strong>: <a href="https://linkbook.ankitkumarjat.me/forgetpass/${token.resetPasswordToken}:${token.tokenId}">https://linkbook.ankitkumarjat.me/forgetpass/${token.resetPasswordToken}:${token.tokenId}</a></p>`, user.email, 'Password reset token');
+                await sendEmail(`<p><strong>Password Reset Link</strong>: <a href="https://linkbook.ankitkumarjat.me/forgetpass/${token.resetPasswordToken}:${token.tokenId}">https://linkbook.ankitkumarjat.me/forgetpass/${token.resetPasswordToken}:${token.tokenId}</a></p>`, user.email, 'Password reset token');
                 res.json({ "success": true, "message": "Reset token generated" })
             }
             else {
                 const token = await saveResetToken(resetPasswordToken, resetPasswordExpires, userId, Reset);
                 // send this token via email to user
-                sendEmail(`<p><strong>token</strong>: ${token.resetPasswordToken}<br> <strong>tokenid: ${token.tokenId}</p>`, user.email, 'Password reset token');
+                await endEmail(`<p><strong>token</strong>: ${token.resetPasswordToken}<br> <strong>tokenid: ${token.tokenId}</p>`, user.email, 'Password reset token');
                 res.json({ "success": true, "message": "Reset token generated" })
             }
         } else {
